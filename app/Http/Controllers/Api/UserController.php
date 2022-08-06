@@ -16,7 +16,7 @@ class UserController extends Controller
             'firstname' => $user->firstname,
             'othernames' => $user->othernames,
             'email' => $user->email,
-            'type' => $user->type,
+            'type' => $user->type == 1 ? 'Individual' : 'Merchant',
         ];
     }
 
