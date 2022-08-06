@@ -17,9 +17,10 @@ class AuthController extends Controller
             ]);
             $credentials = ["phone"=>$request->phone,"password"=>$request->password];
             if (Auth::attempt($credentials, 0)) {
-                return $this->success( ['token' => auth()->user()->createToken('API Token')->plainTextToken ]);
+                $token = auth()->user()->createToken('API Token')->plainTextToken;
+                return $this->success(['token' => $token ]);
             }
-            return $this->err('Credentials not match', 401);
+            return $this->err('Invalid Credentials.');
         }catch(\Exception $e){
             return $e->getMessage();
         }
@@ -54,17 +55,15 @@ class AuthController extends Controller
 
     public function success($data, $message=""){
         return [
-            'status'=>'Success',
-            'code'=>200,
+            'status'=>1,
             'message'=>$message,
             'data'=>$data
         ];
     }
-    public function err($message="", $code=101){
+    public function err($message=""){
         return [
-            'status'=>'Error',
+            'status'=>0,
             'message'=>$message,
-            'code'=>$code,
         ];
     }
 }
