@@ -12,9 +12,10 @@ class UserController extends Controller
         $user = $request->user();
         return [
             'id' => $user->id,
-            'name' => $user->name,
+            'surname' => $user->surname,
+            'firstname' => $user->firstname,
+            'othernames' => $user->othernames,
             'email' => $user->email,
-            'username' => $user->username,
             'type' => $user->type,
         ];
     }
