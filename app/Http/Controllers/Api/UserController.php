@@ -34,7 +34,7 @@ class UserController extends Controller
         $password = "1234567890123";
         $product_code = "001";
         $invoice_amount = 200;
-        $token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGlhcyI6IkBpbWJhaC4wMWc5dGsiLCJleHBpcnkiOiIyMDIyLTA4LTA3VDEwOjIzOjM0LjMyMTMzMloiLCJpc3MiOiJnb25kb3IgY29tbWVyY2UiLCJvcmciOiJhY2Nlc3MiLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwidXNlcmlkIjoiMDFHOVRLVDBTWllCSkhCRURXVktGQ1ZCS0EifQ.rdl_u7gmSMsXLo3TPTIPjrz0p8zRpM_-oMAeVBlW2zxxSW_MnnDTEsYRucxnCv78PIqcAmaCw5u8NSe5jrCnNiwrqem2lES4rzSonlWLlmcOygRIve5xjn3KIMlt2b3QweCzeFVOPvlWp3AFfQj5-MvikRtZA2GVTKFq2JP4DfFW1eVN_bx0t8D4MsUQvbEibKCmleptqooDThxyCkg6CMK-T1A2n_zgSHhp8XfDQLqy8jEpSxZGB3NIGBQ4Lt0CfU08WeFPFYRvCEdLMrrCYC3s9Yg61Fe72OqjwowD2lBlCTt12hvCp7RO4ODbv1Bmk4XQjakj4UtNfHauaiThMLPaGXt7lHGjdBpgYwcngAuRT7SSJT0NsJ2A7K8wygJVoopKr69_k2Ysy7uNJ7vzLBkFerVwB4ARaqL6JNWkY7Z4pctuU3u6vFbmUY5hq-m93yLOgDhLgwoh0c4ASX9aW9upSIkiLTnHPE9OK7B-rdy5jRNKCsr61E14ayET6rFr2QCllNnOMw_8VJoV3OAX1591Ij5rnqCnaJou9TIIVJGo-vV0umxCjq3kZwqwcpBpMxE-rmzCN9VcfgnoLfjpktEMa4hp1VWwKlP0xUkvH6SHNKJnqX1yQya6zuAVf4-TQV0dwU9nSsoUIIK07jWcL--Zy2ex7db5DszGGxtiBeU";
+        $token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGlhcyI6IkBpbWJhaC4wMWc5dGsiLCJleHBpcnkiOiIyMDIyLTA4LTA3VDE1OjA4OjA3LjY0MzUwMFoiLCJpc3MiOiJnb25kb3IgY29tbWVyY2UiLCJvcmciOiJhY2Nlc3MiLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwidXNlcmlkIjoiMDFHOVRLVDBTWllCSkhCRURXVktGQ1ZCS0EifQ.dTm3j-xDqgPasoePeY5Alv3p2o70oQ2OSBU91uv3RbYAF4-bgtP34k9FQGmwHi7LQvDI57rwYnvFUjprQ4oKgzwrG_IUab5eEVv0LNmmsPspJSSddHwa2lNDnnqh9CfsI1Sg0UpyoHJoTwtfP1J_dYYUFQfb2Rr5eA5T-fOquDQt3CINwLYESzRt92Cqhzd1UdKnAumvat6IQYtFGXf8h8iItg1haJtsuixz6M-cyCLyShS4oyLvsfgqkUY3kxhb7tgdMSlf63QPh5Ebjar1J_u__dPbyLQcL3FyqujKlfkzaAFulovv7O8aM5dQg4pkpqhwHq5WaAcrzwtE9n6RoHkJpYP7ztaP-qjUwG6v7peypLrkWc-qGkUxj7Nxh3doB3j22lvYKR577kalEAar3rKH5Vlib7PpdssnG6dFbj5bEyCKvdV87u0MWKbOO1mHM-DwHaUpthJ4LcQmq0yG_ujmyhEk-Wfb7cLpp776WyYOTXlFyID5TTKh3WcsaLOEY9SPmG-O8cFCG-GJMM-r3DpKVhJi5f2j8wckgnGFtBSmOYp_oR6XVk_hK3-SuNaB1mebEu2yN35tkSfeMVGeFW0-23XJOvwQEdQPNv4b5l3CYZ-feQuMNzj2aO_oFWEhC0yEQLZkyTQWA8bXE6X_k3UFs4L22BAfmW8hsNAK1YM";
 //        return eNaira::getBalance($token,$email);
 //        return eNaira::login($email,$password);
 //        return eNaira::getUserByPhone($phone);
@@ -44,6 +44,6 @@ class UserController extends Controller
 //        return eNaira::getTransactions($token,$email);
 //        return eNaira::createDeposit($token,$user_id,$email,1000,"Fund me",);
 //        return eNaira::getBVN("22292907674");
-        return eNaira::createConsumer("22292907674","00140299547","wisewindx","xaxbczczaaxx");
+        return eNaira::createConsumer("22190373502","0052929034","sminuwa","xaxbczczaaxx");
     }
 }

@@ -50,7 +50,9 @@ class eNaira
             ),)
             ->withBody(
                 json_encode($body), "application/json"
-            )->post($url)->json();
+            )->post($url, [
+                'timeout' => 15
+            ])->json();
 
     }
 
@@ -278,7 +280,7 @@ class eNaira
                 "firstName"=>$userDetails->firstName,
                 "middleName"=>$userDetails->middleName,
                 "lastName"=>$userDetails->lastName,
-                "userName"=>$username,
+                "userName"=>$userDetails->email,
                 "phone"=>$userDetails->phoneNumber1,
                 "emailId"=>$userDetails->email,
                 "postalCode"=>"900110",
@@ -293,7 +295,7 @@ class eNaira
                 "remarks"=>"Passed",
                 "referralCode"=>"@imbah.01",
                 "user_type" => strtoupper("USER"),
-                "channel_code" => "APISNG"
+                "channelCode" => "APISNG"
             ];
             return $response = self::request("/enaira-user/CreateConsumerV2", [], $body);
             if ($response['response_code'] == "00") {
