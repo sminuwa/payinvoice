@@ -11,22 +11,20 @@ class AuthController extends Controller
 {
     public function login(Request $request){
         try{
-            $attr = $request->validate([
+            $request->validate([
                 'phone' => 'required',
                 'password' => 'required'
             ]);
             $phone = $request->phone;
             $password = $request->password;
-            $user = User::where('phone', $phone)->first();
-            $type = $user->type == 2 ? "MERCHANT" : "USER";
-            $email = $user->email;
-            if($login = eNaira::login($email, $password, $type)){
+            if($login = User::login($phone, $password)){
+                $user = User::where('phone', $phone)->first();
                 $token = $user->createToken('API Token')->plainTextToken;
                 return $this->success($token, 'Successfully');
             }
             return $this->err('Invalid Credentials.');
         }catch(\Exception $e){
-            return $this->err("Invalid Credentials.");
+            return $this->err("Something went wrong ". $e->getMessage());
         }
     }
 
@@ -57,18 +55,6 @@ class AuthController extends Controller
         ];
     }
 
-    public function success($data, $message=""){
-        return [
-            'status'=>1,
-            'message'=>$message,
-            'token' => $data
-        ];
-    }
-    public function err($message=""){
-        return [
-            'status'=>0,
-            'message'=>$message,
-        ];
-    }
+
 
 }

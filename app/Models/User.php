@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Http\Controllers\Api\eNaira;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'alias',
     ];
 
     /**
@@ -29,7 +31,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
+//        'password',
         'remember_token',
     ];
 
@@ -41,4 +43,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function login($phone, $password){
+        $user = self::where('phone', $phone)->first();
+        $type = $user->type;
+        $email = $user->email;
+        if($login = eNaira::login($email, $password, $type)){
+//            return $login;
+            if($user->alias == ''){ $user->update(['alias' => $login['data']['alias']]);}
+            return $login['data']['token'];
+        }
+        return false;
+    }
 }

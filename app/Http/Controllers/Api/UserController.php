@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -16,15 +17,22 @@ class UserController extends Controller
             'firstname' => $user->firstname,
             'othernames' => $user->othernames,
             'email' => $user->email,
-            'type' => $user->type == 1 ? 'Individual' : 'Merchant',
+            'type' => $user->type,
         ];
     }
 
-    public function getBalance(){
-        return eNaira::getBalance();
+    public function balance(Request $request){
+        $user = $request->user();
+        $phone = $user->phone;
+        $password = $user->password;
+        if($token = User::login($user->phone, $user->password)){
+            return eNaira::getBalance($token, $user->email, $user->type);
+            return $this->success([]);
+        }
+        return $this->err('Something went wrong');
     }
 
-    public function balance(Request $request)
+    public function balance1(Request $request)
     {
         $currentUserAlias = "imbah.01g9tk";
         $recipient = "@imbah.01";
