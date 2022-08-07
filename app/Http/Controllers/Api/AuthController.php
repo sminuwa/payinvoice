@@ -18,7 +18,6 @@ class AuthController extends Controller
             $phone = $request->phone;
             $password = $request->password;
             if($login = User::login($phone, $password)){
-                return $login;
                 $user = User::where('phone', $phone)->first();
                 $token = $user->createToken('API Token')->plainTextToken;
                 return $this->success($token, 'Successfully');
