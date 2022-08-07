@@ -28,6 +28,15 @@ class UserController extends Controller
         return $this->err('Something went wrong');
     }
 
+    public function wallet(Request $request)
+    {
+        $user = $request->user();
+        if($details = eNaira::getUserByPhone($user->phone,$user->type)) {
+            return $details;
+        }
+        return $this->err('Something went wrong');
+    }
+
     public function transactions(Request $request){
         $user = $request->user();
         $t = [];

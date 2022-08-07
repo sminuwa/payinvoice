@@ -18,6 +18,7 @@ class AuthController extends Controller
             $phone = $request->phone;
             $password = $request->password;
             if($login = User::login($phone, $password)){
+                return $login;
                 $user = User::where('phone', $phone)->first();
                 $token = $user->createToken('API Token')->plainTextToken;
                 return $this->success($token, 'Successfully');
@@ -55,6 +56,18 @@ class AuthController extends Controller
         ];
     }
 
-
+    public function success($data, $message=""){
+        return [
+            'status'=>1,
+            'message'=>$message,
+            'token' => $data
+        ];
+    }
+    public function err($message=""){
+        return [
+            'status'=>0,
+            'message'=>$message,
+        ];
+    }
 
 }
