@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
@@ -148,12 +149,157 @@ class eNaira
                 "amount" => $amount,
                 "narration" => $narration,
                 "product_code" => $product_code,
-                "reference" => "PAYINV" . self::generateRandomString(3) . time(),
+                "reference" => "PICI" . self::generateRandomString(3) . time(),
                 "channel_code" => "APISNG"
             ];
             $response = self::request("/CreateInvoice", [], $body);
             if ($response['response_code'] == "00") {
                 return ['status' => 1, 'data' => $response['response_data']];//['wallet_balance'];
+            } else {
+                return ["status" => 0, "message" => "Oops! Something went wrong"];
+            }
+        } catch (\Exception $e) {
+            return ["status" => 0, "message" => "Oops! Something went wrong" . $e->getMessage()];
+        }
+    }
+
+    public static function payFromWallet($token,$email,$recipient_wallet,$amount,$narration,$user_type="USER")
+    {
+        //
+        try {
+            $alias = "@" . str_replace('@', '', $recipient_wallet);
+            $body = [
+                "user_token" => $token,
+                "user_email" => $email,
+                "destination_wallet_alias" => $alias,
+                "amount" => $amount,
+                "reference" => "PIPW" . self::generateRandomString(3) . time(),
+                "narration" => $narration,
+                "user_type" => strtoupper($user_type),
+                "channel_code" => "APISNG"
+            ];
+            $response = self::request("/PaymentFromWallet", [], $body);
+            if ($response['response_code'] == "00") {
+                return ['status' => 1, 'data' => $response['response_data']];//['wallet_balance'];
+            }elseif ($response['response_code'] =="99"){
+                return ['status' => 0, 'message' => $response['response_code']['Data']['message']];
+            } else {
+                return ["status" => 0, "message" => "Oops! Something went wrong"];
+            }
+        } catch (\Exception $e) {
+            return ["status" => 0, "message" => "Oops! Something went wrong" . $e->getMessage()];
+        }
+    }
+
+    public static function getTransactions($token,$email,$user_type="USER")
+    {
+
+        try {
+            $body = [
+                "user_email" => $email,
+                "user_token" => $token,
+                "user_type" => strtoupper($user_type),
+                "channel_code" => "APISNG"
+            ];
+            return $response = self::request("/GetTransactions", [], $body);
+            if ($response['response_code'] == "00") {
+                return ['status' => 1, 'data' => $response['response_data']];//['wallet_balance'];
+            }elseif ($response['response_code'] =="99"){
+                return ['status' => 0, 'message' => $response['response_code']['Data']['message']];
+            } else {
+                return ["status" => 0, "message" => "Oops! Something went wrong"];
+            }
+        } catch (\Exception $e) {
+            return ["status" => 0, "message" => "Oops! Something went wrong" . $e->getMessage()];
+        }
+    }
+
+    public static function createDeposit($token,$user_id,$email,$amount,$narration,$account_no="0760261888",$user_type="USER")
+    {
+        try {
+            $body = [
+                "user_id" => $user_id,
+                "user_token" => $token,
+                "account_no" => $account_no,
+                "amount" => $amount,
+                "user_email" => $email,
+                "reference" => "PICD" . self::generateRandomString(3) . time(),
+                "narration" => $narration,
+                "user_type" => strtoupper($user_type),
+                "channel_code" => "APISNG"
+            ];
+            $response = self::request("/CreateDeposit", [], $body);
+            if ($response['response_code'] == "00") {
+                return ['status' => 1, 'data' => $response['response_data']];//['wallet_balance'];
+            }elseif ($response['response_code'] =="99"){
+                return ['status' => 0, 'message' => $response['response_code']['Data']['message']];
+            } else {
+                return ["status" => 0, "message" => "Oops! Something went wrong"];
+            }
+        } catch (\Exception $e) {
+            return ["status" => 0, "message" => "Oops! Something went wrong" . $e->getMessage()];
+        }
+    }
+
+    public static function getBVN($bvn)
+    {
+        try {
+            $body = [
+                "bvn" => $bvn,
+                "channel_code" => "APISNG"
+            ];
+            $response = self::request("/customer/identity/BVN", [], $body);
+            if ($response['response_code'] == "00") {
+                return ['status' => 1, 'data' => $response['response_data']];//['wallet_balance'];
+            }elseif ($response['response_code'] =="99"){
+                return ['status' => 0, 'message' => $response['response_code']['Data']['message']];
+            } else {
+                return ["status" => 0, "message" => "Oops! Something went wrong"];
+            }
+        } catch (\Exception $e) {
+            return ["status" => 0, "message" => "Oops! Something went wrong" . $e->getMessage().$e->getTraceAsString()];
+        }
+    }
+
+    public static function createConsumer($bvn,$account_no,$username,$password)
+    {
+        try {
+            $bvnDetails = self::getBVN($bvn);
+            if($bvnDetails['status']!=1){
+                return ["status" => 0, "message" => "Invalid BVN" ];
+            }
+            $userDetails = (object)$bvnDetails['data'];
+            $date = Carbon::createFromFormat("d-M-Y",$userDetails->dateOfBirth)->format('d/m/Y');
+            $body = [
+                "uid"=>$bvn,
+                "uidType"=>"BVN",
+                "reference" => "PICC" . self::generateRandomString(3) . time(),
+                "title"=>"Mr",
+                "firstName"=>$userDetails->firstName,
+                "middleName"=>$userDetails->middleName,
+                "lastName"=>$userDetails->lastName,
+                "userName"=>$username,
+                "phone"=>$userDetails->phoneNumber1,
+                "emailId"=>$userDetails->email,
+                "postalCode"=>"900110",
+                "city"=>$userDetails->lgaOfResidence,
+                "address"=>$userDetails->residentialAddress,
+                "countryOfResidence"=>"NG",
+                "tier"=>2,
+                "password"=>$password,
+                "accountNumber"=>$account_no,
+                "dateOfBirth"=>$date,
+                "countryOfBirth"=>"NG",
+                "remarks"=>"Passed",
+                "referralCode"=>"@imbah.01",
+                "user_type" => strtoupper("USER"),
+                "channel_code" => "APISNG"
+            ];
+            return $response = self::request("/enaira-user/CreateConsumerV2", [], $body);
+            if ($response['response_code'] == "00") {
+                return ['status' => 1, 'data' => $response['response_data']];//['wallet_balance'];
+            }elseif ($response['response_code'] =="99"){
+                return ['status' => 0, 'message' => $response['response_code']['Data']['message']];
             } else {
                 return ["status" => 0, "message" => "Oops! Something went wrong"];
             }
