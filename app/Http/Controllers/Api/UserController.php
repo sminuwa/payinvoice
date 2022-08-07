@@ -11,19 +11,11 @@ class UserController extends Controller
     //
     public function index(Request $request){
         $user = $request->user();
-//        return $user;
-//        if($token = User::login($user->phone, $user->password)){
-            return eNaira::getUserByPhone($user->phone,$user->type);
-//        }
-
-        return [
-            'id' => $user->id,
-            'surname' => $user->surname,
-            'firstname' => $user->firstname,
-            'othernames' => $user->othernames,
-            'email' => $user->email,
-            'type' => $user->type,
-        ];
+        return $user;
+        if($details = eNaira::getUserByPhone($user->phone,$user->type)) {
+            return $details;
+        }
+        return $this->err('Something went wrong');
     }
 
     public function balance(Request $request){
@@ -32,6 +24,31 @@ class UserController extends Controller
         $password = $user->password;
         if($token = User::login($user->phone, $user->password)){
             return eNaira::getBalance($token, $user->email, $user->type);
+        }
+        return $this->err('Something went wrong');
+    }
+
+    public function transactions(Request $request){
+        $user = $request->user();
+        $t = [];
+        if($token = User::login($user->phone, $user->password)){
+            $transactions = eNaira::getTransactions($token,$user->email,$user->type);
+            foreach($transactions['response_data'] as $transaction){
+                $t[] = [
+                    'id'=>$transaction['cursor'],
+                    'amount'=>$transaction['node']['amount'],
+                    'currencyCode'=>$transaction['node']['currencyCode'],
+                    'currentState'=>$transaction['node']['currentState'],
+                    'feeAmount'=>$transaction['node']['feeAmount'],
+                    'guid'=>$transaction['node']['guid'],
+                    'insertedAt'=>$transaction['node']['insertedAt'],
+                    'invoiceGuid'=>$transaction['node']['invoiceGuid'],
+                    'transactionWalletAddress'=>$transaction['node']['transactionWalletAddress'],
+                    'type'=>$transaction['node']['type'],
+                    'updatedAt'=>$transaction['node']['updatedAt'],
+                ];
+            }
+            return $t;
         }
         return $this->err('Something went wrong');
     }
