@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     public function login(Request $request){
-        return $request;
         try{
             $request->validate([
                 'phone' => 'required',
@@ -19,6 +18,7 @@ class AuthController extends Controller
             $phone = $request->phone;
             $password = $request->password;
             if($login = User::login($phone, $password)){
+                return $login;
                 $user = User::where('phone', $phone)->first();
                 $token = $user->createToken('API Token')->plainTextToken;
                 return $this->success($token, 'Successfully');
