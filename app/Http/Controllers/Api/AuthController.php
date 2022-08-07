@@ -15,6 +15,17 @@ class AuthController extends Controller
                 'phone' => 'required',
                 'password' => 'required'
             ]);
+            $phone = $request->phone;
+            $password = $request->password;
+            $user = User::where('phone', $phone)->first();
+            $type = $user->type == 2 ? "MERCHANT" : "USER";
+            $email = $user->email;
+            if($login = eNaira::login($email, $password, $type)){
+                $token = $user->createToken('API Token')->plainTextToken;
+                return $this->success($token, 'Successfully');
+            }
+
+            return eNaira::login('$email',$password,$user_type);
             $credentials = ["phone"=>$request->phone,"password"=>$request->password];
             if (Auth::attempt($credentials, 0)) {
                 $token = auth()->user()->createToken('API Token')->plainTextToken;
@@ -38,9 +49,9 @@ class AuthController extends Controller
             $user->email = $request->email;
             $user->password = bcrypt($request->password);
             $user->save();
-            return $this->success([
-                'token' => $user->createToken('tokens')->plainTextToken
-            ]);
+            return $this->success(
+                $user->createToken('tokens')->plainTextToken
+            );
         }catch(\Exception $e){
             return $e->getMessage();
         }
@@ -57,7 +68,7 @@ class AuthController extends Controller
         return [
             'status'=>1,
             'message'=>$message,
-            'data'=>$data
+            'token' => $data
         ];
     }
     public function err($message=""){
