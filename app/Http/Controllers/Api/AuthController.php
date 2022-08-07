@@ -24,16 +24,9 @@ class AuthController extends Controller
                 $token = $user->createToken('API Token')->plainTextToken;
                 return $this->success($token, 'Successfully');
             }
-
-            return eNaira::login('$email',$password,$user_type);
-            $credentials = ["phone"=>$request->phone,"password"=>$request->password];
-            if (Auth::attempt($credentials, 0)) {
-                $token = auth()->user()->createToken('API Token')->plainTextToken;
-                return $this->success(['token' => $token ]);
-            }
             return $this->err('Invalid Credentials.');
         }catch(\Exception $e){
-            return $e->getMessage();
+            return $this->err($e->getMessage());
         }
     }
 
