@@ -13,6 +13,9 @@ class CardController extends Controller
     {
         $user = $request->user();
         $cards = Card::where('user_id', $user->id);
+        if($cards){
+            return ['status' => 1, 'data' => $cards];
+        }
     }
 
     public function create(Request $request)

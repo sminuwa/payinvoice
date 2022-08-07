@@ -27,7 +27,8 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/transactions', [UserController::class, 'transactions']);
 
     //card
-    Route::prefix('card')->group(function(){
+    Route::prefix('cards')->group(function(){
+       Route::post('/', [CardController::class,'index']);
        Route::post('/create', [CardController::class,'create']);
        Route::post('/transactions', [CardController::class,'transactions']);
     });
