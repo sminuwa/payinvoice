@@ -24,5 +24,10 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/balance', [UserController::class, 'balance']);
     Route::get('/wallet', [UserController::class, 'wallet']);
     Route::get('/transactions', [UserController::class, 'transactions']);
+
+    //card
+    Route::prefix('card')->group(function(){
+       Route::post('/create', [CardController::class,'create']);
+    });
 });
     Route::get('/getBalance1', [UserController::class, 'balance1']);
