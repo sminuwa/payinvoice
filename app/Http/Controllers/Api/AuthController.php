@@ -26,7 +26,7 @@ class AuthController extends Controller
             }
             return $this->err('Invalid Credentials.');
         }catch(\Exception $e){
-            return $this->err($e->getMessage());
+            return $this->err("Invalid Credentials.");
         }
     }
 
