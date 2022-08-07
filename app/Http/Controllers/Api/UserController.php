@@ -20,8 +20,6 @@ class UserController extends Controller
 
     public function balance(Request $request){
         $user = $request->user();
-        $phone = $user->phone;
-        $password = $user->password;
         if($token = User::login($user->phone, $user->password)){
             return eNaira::getBalance($token, $user->email, $user->type);
         }
