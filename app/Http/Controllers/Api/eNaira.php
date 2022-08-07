@@ -15,13 +15,24 @@ class eNaira
 
     public static function clientInstance(): Client
     {
-        $client =  new Client([
+        $client = new Client([
             'base_url' => eNaira::BASE_URL,
             'protocols' => ['http']
         ]);
 
 
         return $client;
+    }
+
+    public static function generateRandomString($length = 25)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 
     public static function request($url, $header, $body)
@@ -37,94 +48,117 @@ class eNaira
                 $header
             ),)
             ->withBody(
-                json_encode($body),"application/json"
+                json_encode($body), "application/json"
             )->post($url)->json();
 
     }
 
     // get balance  $user_type (USER,MERCHANT)
-    public static function getBalance($token,$email,$user_type="USER")
+    public static function getBalance($token, $email, $user_type = "USER")
     {
-        try{
+        try {
             $body = [
-                "user_email"=>$email,
-                "user_token"=>$token,
-                "user_type"=>strtoupper($user_type),
-                "channel_code"=>"APISNG"
+                "user_email" => $email,
+                "user_token" => $token,
+                "user_type" => strtoupper($user_type),
+                "channel_code" => "APISNG"
             ];
-            $response = self::request("/GetBalance",[],$body);
-            if($response['response_code']=="00"){
-                return ["status"=>1,"data"=>$response['response_data']['wallet_balance']];
-            }else if($response['response_code']=="99"){
-                return ["status"=>2,"message"=>"User token Expired"];
-            }else{
-                return ["status"=>0,"message"=>"Oops! Something went wrong"];
+            $response = self::request("/GetBalance", [], $body);
+            if ($response['response_code'] == "00") {
+                return ["status" => 1, "data" => $response['response_data']['wallet_balance']];
+            } else if ($response['response_code'] == "99") {
+                return ["status" => 2, "message" => "User token Expired"];
+            } else {
+                return ["status" => 0, "message" => "Oops! Something went wrong"];
             }
-        }catch (\Exception $e){
-            return ["status"=>0,"message"=>"Oops! Something went wrong".$e->getMessage()];
+        } catch (\Exception $e) {
+            return ["status" => 0, "message" => "Oops! Something went wrong" . $e->getMessage()];
         }
     }
+
     //create account
 
-    public static function login($email,$password,$user_type="USER")
+    public static function login($email, $password, $user_type = "USER")
     {//
-        try{
+        try {
             $body = [
-                "user_id"=>$email,
-                "password"=>$password,
-                "allow_tokenization"=>"Y",
-                "user_type"=>strtoupper($user_type),
-                "channel_code"=>"APISNG"
+                "user_id" => $email,
+                "password" => $password,
+                "allow_tokenization" => "Y",
+                "user_type" => strtoupper($user_type),
+                "channel_code" => "APISNG"
             ];
-            $response = self::request("/CAMLLogin",[],$body);
-            if($response['response_code']=="00"){
-                return ['status'=>1,'data'=>$response['response_data']];//['wallet_balance'];
-            }else{
-                return ["status"=>0,"message"=>"Oops! Something went wrong"];
+            $response = self::request("/CAMLLogin", [], $body);
+            if ($response['response_code'] == "00") {
+                return ['status' => 1, 'data' => $response['response_data']];//['wallet_balance'];
+            } else {
+                return ["status" => 0, "message" => "Oops! Something went wrong"];
             }
-        }catch (\Exception $e){
-            return ["status"=>0,"message"=>"Oops! Something went wrong".$e->getMessage()];
+        } catch (\Exception $e) {
+            return ["status" => 0, "message" => "Oops! Something went wrong" . $e->getMessage()];
         }
     }
 
-    public static function getUserByPhone($phone_number,$user_type="USER")
+    public static function getUserByPhone($phone_number, $user_type = "USER")
     {
         //
-        try{
+        try {
             $body = [
-                "phone_number"=>$phone_number,
-                "user_type"=>strtoupper($user_type),
-                "channel_code"=>"APISNG"
+                "phone_number" => $phone_number,
+                "user_type" => strtoupper($user_type),
+                "channel_code" => "APISNG"
             ];
-            $response = self::request("/enaira-user/GetUserDetailsByPhone",[],$body);
-            if($response['response_code']=="00"){
-                return ['status'=>1,'data'=>$response['response_data']];//['wallet_balance'];
-            }else{
-                return ["status"=>0,"message"=>"Oops! Something went wrong"];
+            $response = self::request("/enaira-user/GetUserDetailsByPhone", [], $body);
+            if ($response['response_code'] == "00") {
+                return ['status' => 1, 'data' => $response['response_data']];//['wallet_balance'];
+            } else {
+                return ["status" => 0, "message" => "Oops! Something went wrong"];
             }
-        }catch (\Exception $e){
-            return ["status"=>0,"message"=>"Oops! Something went wrong".$e->getMessage()];
+        } catch (\Exception $e) {
+            return ["status" => 0, "message" => "Oops! Something went wrong" . $e->getMessage()];
         }
     }
 
-    public static function getUserByAlias($wallet_alias,$user_type="USER")
+    public static function getUserByAlias($wallet_alias, $user_type = "USER")
     {
         //
-        try{
-            $alias = "@".str_replace('@','',$wallet_alias);
+        try {
+            $alias = "@" . str_replace('@', '', $wallet_alias);
             $body = [
-                "wallet_alias"=>$alias,
-                "user_type"=>strtoupper($user_type),
-                "channel_code"=>"APISNG"
+                "wallet_alias" => $alias,
+                "user_type" => strtoupper($user_type),
+                "channel_code" => "APISNG"
             ];
-            $response = self::request("/enaira-user/GetUserDetailsByWalletAlias",[],$body);
-            if($response['response_code']=="00"){
-                return ['status'=>1,'data'=>$response['response_data']];//['wallet_balance'];
-            }else{
-                return ["status"=>0,"message"=>"Oops! Something went wrong"];
+            $response = self::request("/enaira-user/GetUserDetailsByWalletAlias", [], $body);
+            if ($response['response_code'] == "00") {
+                return ['status' => 1, 'data' => $response['response_data']];//['wallet_balance'];
+            } else {
+                return ["status" => 0, "message" => "Oops! Something went wrong"];
             }
-        }catch (\Exception $e){
-            return ["status"=>0,"message"=>"Oops! Something went wrong".$e->getMessage()];
+        } catch (\Exception $e) {
+            return ["status" => 0, "message" => "Oops! Something went wrong" . $e->getMessage()];
+        }
+    }
+
+    public static function createInvoice($product_code, $amount, $narration)
+    {
+        //CreateInvoice
+        try {
+            $body = [
+                "amount" => $amount,
+                "narration" => $narration,
+                "product_code" => $product_code,
+                "reference" => "PAYINV" . self::generateRandomString(3) . time(),
+                "channel_code" => "APISNG"
+            ];
+            $response = self::request("/CreateInvoice", [], $body);
+            if ($response['response_code'] == "00") {
+                return ['status' => 1, 'data' => $response['response_data']];//['wallet_balance'];
+            } else {
+                return ["status" => 0, "message" => "Oops! Something went wrong"];
+            }
+        } catch (\Exception $e) {
+            return ["status" => 0, "message" => "Oops! Something went wrong" . $e->getMessage()];
         }
     }
 }
