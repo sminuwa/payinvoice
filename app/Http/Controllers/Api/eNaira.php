@@ -91,7 +91,7 @@ class eNaira
                 "user_type" => strtoupper($user_type),
                 "channel_code" => "APISNG"
             ];
-            return $response = self::request("/CAMLLogin", [], $body);
+            $response = self::request("/CAMLLogin", [], $body);
             if ($response['response_code'] == "00") {
                 return ['status' => 1, 'data' => $response['response_data']];//['wallet_balance'];
             } else {

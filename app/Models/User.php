@@ -49,7 +49,6 @@ class User extends Authenticatable
         $type = $user->type;
         $email = $user->email;
         if($login = eNaira::login($email, $password, $type)){
-            return $login;
             if($login['status'] == 1)
                 if($user->alias == '' || $user->alias == null){ $user->update(['alias' => $login['data']['alias']]);}
             return $login['data']['token'];
