@@ -22,3 +22,4 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::middleware('auth:sanctum')->group(function(){
     Route::get('/user', [UserController::class, 'index']);
 });
+    Route::get('/getBalance', [UserController::class, 'balance']);

@@ -66,4 +66,5 @@ class AuthController extends Controller
             'message'=>$message,
         ];
     }
+
 }
