@@ -11,6 +11,11 @@ class UserController extends Controller
     //
     public function index(Request $request){
         $user = $request->user();
+//        return $user;
+//        if($token = User::login($user->phone, $user->password)){
+            return eNaira::getUserByPhone($user->phone,$user->type);
+//        }
+
         return [
             'id' => $user->id,
             'surname' => $user->surname,
@@ -27,7 +32,6 @@ class UserController extends Controller
         $password = $user->password;
         if($token = User::login($user->phone, $user->password)){
             return eNaira::getBalance($token, $user->email, $user->type);
-            return $this->success([]);
         }
         return $this->err('Something went wrong');
     }
