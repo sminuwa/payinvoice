@@ -29,8 +29,8 @@ class UserController extends Controller
     public function wallet(Request $request)
     {
         $user = $request->user();
-        if($details = eNaira::getUserByPhone($user->phone,$user->type)) {
-            return $details;
+        if($wallet = eNaira::getUserByPhone($user->phone,$user->type)) {
+            return $wallet['data']['wallet_info'];
         }
         return $this->err('Something went wrong');
     }
