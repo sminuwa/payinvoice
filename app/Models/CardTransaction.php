@@ -13,11 +13,11 @@ class CardTransaction extends Model
 
     public function getCreatedAtAttribute($date)
     {
-        return date('Y-m-d', strtotime($date));
+        return date('Y-m-d h:i', strtotime($date));
     }
 
     public function getUpdatedAtAttribute($date)
     {
-        return date('Y-m-d', strtotime($date));
+        return date('Y-m-d h:i', strtotime($date));
     }
 }
