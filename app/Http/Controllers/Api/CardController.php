@@ -16,7 +16,7 @@ class CardController extends Controller
         $user = $request->user();
         $cards = Card::where('user_id', $user->id)->get();
         if($cards){
-            return ['status' => 1, 'data' => $cards];
+            return ['status' => 1, 'cards' => $cards];
         }
         return ['status' => 0, 'message'=>'Something went wrong'];
     }
@@ -40,7 +40,7 @@ class CardController extends Controller
         $card_id = $request->card_id;
         $transactions = CardTransaction::where('card_id', $card_id)->get();
         if($transactions){
-            return ['status' => 1, 'data' => $transactions];
+            return ['status' => 1, 'transactions' => $transactions];
         }
         return ['status' => 0, 'message'=>'Something went wrong'];
     }
