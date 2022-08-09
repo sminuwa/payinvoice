@@ -21,8 +21,9 @@ class CardController extends Controller
         return ['status' => 0, 'message'=>'Something went wrong'];
     }
 
-    public function show(Card $card)
+    public function show(Request $request)
     {
+        $card = Card::find($request->card_id);
         if($card){
             return ['status' => 1, 'card' => array_merge($card->toArray(), ['transactions'=>$card->transactions])];
         }
