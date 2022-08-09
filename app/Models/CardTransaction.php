@@ -10,4 +10,14 @@ class CardTransaction extends Model
     use HasFactory;
 
     protected $table = 'card_transactions';
+
+    public function getCreatedAtAttribute($date)
+    {
+        return date('Y-m-d', strtotime($date));
+    }
+
+    public function getUpdatedAtAttribute($date)
+    {
+        return date('Y-m-d', strtotime($date));
+    }
 }

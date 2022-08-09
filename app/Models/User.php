@@ -46,6 +46,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function getCreatedAtAttribute($date)
+    {
+        return date('Y-m-d', strtotime($date));
+    }
+
+    public function getUpdatedAtAttribute($date)
+    {
+        return date('Y-m-d', strtotime($date));
+    }
+
     public static function login($phone, $password){
         $user = self::where('phone', $phone)->first();
         $type = $user->type;
