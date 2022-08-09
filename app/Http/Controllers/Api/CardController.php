@@ -21,12 +21,21 @@ class CardController extends Controller
         return ['status' => 0, 'message'=>'Something went wrong'];
     }
 
+    public function show(Card $card)
+    {
+        if($card){
+            return ['status' => 1, 'card' => array_merge($card->toArray(), ['transactions'=>$card->transactions])];
+        }
+        return ['status' => 0, 'message'=>'Something went wrong'];
+    }
+
     public function create(Request $request)
     {
         $user = $request->user();
         $card = new Card();
         $card->user_id = $user->id;
         $card->number = rand(10000000, 99999999);
+        $card->name = $request->name;
         $card->pin = $request->pin;
         $card->type = $user->type == User::TYPE_MERCHANT ? User::TYPE_MERCHANT : User::TYPE_USER;
         if($card->save()){

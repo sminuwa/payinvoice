@@ -10,4 +10,8 @@ class Card extends Model
     use HasFactory;
 
     protected $table = 'cards';
+
+    public function transactions(){
+        return $this->hasMany(CardTransaction::class, 'card_id');
+    }
 }
