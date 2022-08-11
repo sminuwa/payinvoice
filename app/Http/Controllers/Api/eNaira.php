@@ -259,7 +259,7 @@ class eNaira
                 return ["status" => 0, "message" => "Oops! Something went wrong"];
             }
         } catch (\Exception $e) {
-            return ["status" => 0, "message" => "Oops! Something went wrong" . $e->getMessage().$e->getTraceAsString()];
+            return ["status" => 0, "message" => "Oops! Something went wrong " . $e->getMessage().$e->getTraceAsString()];
         }
     }
 

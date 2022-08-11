@@ -82,4 +82,28 @@ class UserController extends Controller
 //        return eNaira::getBVN("22292907674");
         return eNaira::createConsumer("22190373502","0052929034","sminuwa","xaxbczczaaxx");
     }
+
+
+    public function signup(Request $request){
+        $bvn = $request->bvn;
+        $password = $request->password;
+        if(!$bvn) return ['status'=>0, 'message'=>'Please provide bvn'];
+        if(!$password) return ['status'=>0, 'message'=>'Please provide password'];
+        if($response = eNaira::getBVN($bvn)){
+            $details = (object)$response['data'];
+            $user = new User();
+            $user->firstname = $details->firstName;
+            $user->surname = $details->lastName;
+            $user->othernames = $details->middleName;
+            $user->bvn = $details->BVN;
+            $user->dob = $details->dateOfBirth;
+            $user->email = $details->email;
+            $user->gender = $details->gender;
+            $user->phone = $details->phoneNumber1;
+            $user->password = $password;
+            $user->save();
+            return ['status'=>1, 'message'=>'Account created successfully'];
+        };
+        return ['status'=>0, 'message'=>'Something went wrong'];
+    }
 }
